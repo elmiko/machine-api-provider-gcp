@@ -112,7 +112,14 @@ func (r *Reconciler) checkQuota(guestAccelerators []machinev1.GCPGPUConfig) erro
 	// preemptible instances have separate quota
 	if r.providerSpec.Preemptible {
 		metric = "PREEMPTIBLE_" + metric
+	} else {
+		metric = "COMMITTED_" + metric
 	}
+
+	for _, q := range quotas {
+		klog.Infof("found quota: %s", q.Metric)
+	}
+
 	// check quota for GA
 	for i, q := range quotas {
 		if q.Metric == metric {
